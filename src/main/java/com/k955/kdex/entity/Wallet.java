@@ -27,7 +27,7 @@ public class Wallet {
     User user;
 
     @Builder.Default
-    @Column(nullable = false)
+    @Column(nullable = false, length = 19, scale = 4)
     BigDecimal balance = BigDecimal.valueOf(1500);
 
     @Version

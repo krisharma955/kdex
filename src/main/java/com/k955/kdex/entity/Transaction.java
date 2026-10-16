@@ -53,8 +53,8 @@ public class Transaction {
     @Column(nullable = false, precision = 19, scale = 4)
     BigDecimal balanceAfter;
 
-    @Column(length = 100)
-    String idempotencyKey;
+    @Column(name = "idempotency_key")
+    UUID idempotencyKey;
 
     @Column(nullable = false, updatable = false)
     Instant createdAt;
