@@ -41,4 +41,18 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(exceptionResponse.status()).body(exceptionResponse);
     }
 
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<ExceptionResponse> handleAccessDeniedException(
+            AccessDeniedException exception, HttpServletRequest request
+    ) {
+        ExceptionResponse exceptionResponse = new ExceptionResponse(
+                HttpStatus.FORBIDDEN,
+                exception.getCode(),
+                exception.getMessage(),
+                request.getServletPath(),
+                Instant.now());
+        log.error("Bad Request: code={}, path={}", exception.getCode(), request.getServletPath());
+        return ResponseEntity.status(exceptionResponse.status()).body(exceptionResponse);
+    }
+
 }
