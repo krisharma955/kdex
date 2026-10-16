@@ -1,9 +1,11 @@
 package com.k955.kdex.exception;
 
+import jakarta.persistence.OptimisticLockException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -53,6 +55,24 @@ public class GlobalExceptionHandler {
                 Instant.now());
         log.error("Bad Request: code={}, path={}", exception.getCode(), request.getServletPath());
         return ResponseEntity.status(exceptionResponse.status()).body(exceptionResponse);
+    }
+
+    @ExceptionHandler({OptimisticLockException.class, ObjectOptimisticLockingFailureException.class})
+    public ResponseEntity<ExceptionResponse> handleOptimisticLockFailure(
+            Exception ex,
+            HttpServletRequest request
+    ) {
+        log.warn("Concurrent modification detected for path: {}", request.getRequestURI());
+
+        ExceptionResponse response = new ExceptionResponse(
+                HttpStatus.CONFLICT,
+                ErrorCode.CONCURRENT_MODIFICATION,
+                "Your account was updated by another request. Please refresh and try again.",
+                request.getRequestURI(),
+                Instant.now()
+        );
+
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
     }
 
 }

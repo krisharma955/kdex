@@ -154,7 +154,7 @@ public class CoinServiceImpl implements CoinService {
                         ErrorCode.COIN_NOT_FOUND, "The coin can't be loaded at the moment. Try Later!"
                 ));
 
-        coin.setActive(updateCoinStatusRequest.isActive());
+        coin.setIsActive(updateCoinStatusRequest.isActive());
 
         Coin saved = coinRepository.save(coin);
 

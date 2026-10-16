@@ -39,7 +39,7 @@ public class Coin {
 
     @Builder.Default
     @Column(nullable = false)
-    boolean isActive = true;
+    Boolean isActive = true;
 
     @Column(nullable = false, updatable = false)
     Instant createdAt;

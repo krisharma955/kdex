@@ -9,7 +9,7 @@ public record CoinResponse(
         BigDecimal currentPrice,
         BigDecimal previousPrice,
         BigDecimal volatilityPct,
-        boolean isActive,
+        Boolean isActive,
         Instant updatedAt
 ) {
 }
