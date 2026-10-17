@@ -25,9 +25,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
         // WebSocket connection endpoint
         registry.addEndpoint("/ws")
-                .setAllowedOriginPatterns(
-                        "http://localhost:3000"
-                );
+                .setAllowedOriginPatterns("*");
     }
 
 
