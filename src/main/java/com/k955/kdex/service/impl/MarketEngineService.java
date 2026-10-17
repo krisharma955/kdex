@@ -1,11 +1,13 @@
 package com.k955.kdex.service.impl;
 
+import com.k955.kdex.dtos.Coin.MarketPriceUpdate;
 import com.k955.kdex.entity.Coin;
 import com.k955.kdex.entity.PriceHistory;
 import com.k955.kdex.repository.CoinRepository;
 import com.k955.kdex.repository.PriceHistoryRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,6 +26,7 @@ public class MarketEngineService {
 
     private final CoinRepository coinRepository;
     private final PriceHistoryRepository priceHistoryRepository;
+    private final ApplicationEventPublisher applicationEventPublisher;
 
     private static final int PRICE_SCALE = 8;
     private static final BigDecimal HUNDRED = BigDecimal.valueOf(100);
@@ -55,6 +58,21 @@ public class MarketEngineService {
                     .price(newPrice)
                     .recordedAt(tickTime)
                     .build());
+
+            BigDecimal changePct = newPrice
+                    .subtract(oldPrice)
+                    .multiply(BigDecimal.valueOf(100))
+                    .divide(oldPrice, 2, RoundingMode.HALF_UP);
+
+            applicationEventPublisher.publishEvent(
+                    new MarketPriceUpdate(
+                            coin.getSymbol(),
+                            oldPrice,
+                            newPrice,
+                            changePct,
+                            tickTime
+                    )
+            );
         }
 
         coinRepository.saveAll(coins);
