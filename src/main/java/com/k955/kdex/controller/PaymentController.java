@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/payments")
 public class PaymentController {
 
     private final PaymentProcessor paymentProcessor;
@@ -25,7 +24,7 @@ public class PaymentController {
     @Value("${stripe.api.webhook-secret}")
     private String webhookSecret;
 
-    @PostMapping("/webhook")
+    @PostMapping({"/api/payments/webhook", "/api/webhooks/stripe"})
     public ResponseEntity<String> handleStripeWebhook(
             @RequestBody String payload,
             @RequestHeader("Stripe-Signature") String signatureHeader

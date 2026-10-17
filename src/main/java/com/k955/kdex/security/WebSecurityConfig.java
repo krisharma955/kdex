@@ -39,7 +39,7 @@ public class WebSecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/**", "/health-check", "/ws", "/ws/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/coins/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/webhooks/stripe").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/payments/webhook", "/api/webhooks/stripe").permitAll()
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
