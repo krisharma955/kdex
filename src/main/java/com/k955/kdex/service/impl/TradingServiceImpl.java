@@ -50,7 +50,7 @@ public class TradingServiceImpl implements TradingService {
         if(duplicateTransaction) throw new BadRequestException(
                 ErrorCode.DUPLICATE_REQUEST, "Your buy requst was already initiated.");
 
-        Coin coin = coinRepository.findBySymbol(buyRequest.symbol())
+        Coin coin = coinRepository.findBySymbol(buyRequest.symbol().trim().toUpperCase())
                 .orElseThrow(() -> new ResourceNotFoundException(
                         ErrorCode.COIN_NOT_FOUND, "The coin can't be loaded at the moment. Try Later!"
                 ));
@@ -150,7 +150,7 @@ public class TradingServiceImpl implements TradingService {
         if(duplicateTransaction) throw new BadRequestException(
                 ErrorCode.DUPLICATE_REQUEST, "Your sell requst was already initiated.");
 
-        Coin coin = coinRepository.findBySymbol(sellRequest.symbol())
+        Coin coin = coinRepository.findBySymbol(sellRequest.symbol().trim().toUpperCase())
                 .orElseThrow(() -> new ResourceNotFoundException(
                         ErrorCode.COIN_NOT_FOUND, "The coin can't be loaded at the moment. Try Later!"
                 ));

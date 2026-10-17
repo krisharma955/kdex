@@ -44,7 +44,7 @@ public class CoinServiceImpl implements CoinService {
     @Override
     @Transactional(readOnly = true)
     public CoinResponse getCoinBySymbol(String symbol) {
-        Coin coin = coinRepository.findBySymbol(symbol.toUpperCase())
+        Coin coin = coinRepository.findBySymbol(symbol.trim().toUpperCase())
                 .orElseThrow(() -> new ResourceNotFoundException(
                         ErrorCode.COIN_NOT_FOUND, "This coin is unavailable or no longer exists."
                 ));
@@ -54,7 +54,7 @@ public class CoinServiceImpl implements CoinService {
     @Override
     @Transactional(readOnly = true)
     public CoinHistory getCoinHistory(String symbol) {
-        Coin coin = coinRepository.findBySymbol(symbol.toUpperCase())
+        Coin coin = coinRepository.findBySymbol(symbol.trim().toUpperCase())
                 .orElseThrow(() -> new ResourceNotFoundException(
                         ErrorCode.COIN_NOT_FOUND, "We couldn't find a coin with the specified symbol."
                 ));
@@ -121,11 +121,13 @@ public class CoinServiceImpl implements CoinService {
             throw new AccessDeniedException(ErrorCode.REQUEST_FORBIDDEN, "Only Admins can add Coins");
         }
 
-        boolean check = coinRepository.existsBySymbol(coinRequest.symbol());
+        String symbol = coinRequest.symbol().trim().toUpperCase();
+
+        boolean check = coinRepository.existsBySymbol(symbol);
         if(check) throw new BadRequestException(ErrorCode.DUPLICATE_REQUEST, "A coin with this symbol already exists.");
 
         Coin coin = Coin.builder()
-                .symbol(coinRequest.symbol())
+                .symbol(symbol)
                 .name(coinRequest.name())
                 .currentPrice(coinRequest.currentPrice())
                 .previousPrice(coinRequest.previousPrice())
