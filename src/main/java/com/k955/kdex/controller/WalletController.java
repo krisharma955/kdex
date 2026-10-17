@@ -3,7 +3,6 @@ package com.k955.kdex.controller;
 import com.k955.kdex.dtos.Wallet.DepositRequest;
 import com.k955.kdex.dtos.Wallet.WalletResponse;
 import com.k955.kdex.payment.CheckoutResponse;
-import com.k955.kdex.payment.PortalResponse;
 import com.k955.kdex.service.WalletService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -25,11 +24,6 @@ public class WalletController {
     @PostMapping("/deposit")
     public ResponseEntity<CheckoutResponse> deposit(@Valid @RequestBody DepositRequest depositRequest) {
         return ResponseEntity.ok(walletService.createDepositCheckout(depositRequest));
-    }
-
-    @PostMapping("/portal")
-    public ResponseEntity<PortalResponse> openCustomerPortal() {
-        return ResponseEntity.ok(walletService.openCustomerPortal());
     }
 
 }

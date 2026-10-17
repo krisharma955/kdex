@@ -89,34 +89,6 @@ public class StripePaymentProcessor implements PaymentProcessor {
     }
 
     @Override
-    public PortalResponse openCustomerPortal() {
-        UUID userId = jwtAuthUtil.getCurrentUserId();
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new ResourceNotFoundException(
-                        ErrorCode.USER_NOT_FOUND, "The User Details can't be loaded at the moment. Try Again!"
-                ));
-
-        String stripeCustomerId = user.getStripeCustomerId();
-
-        if (stripeCustomerId == null || stripeCustomerId.isEmpty()) {
-            throw new BadRequestException(ErrorCode.STRIPE_CUSTOMER_ID_NOT_FOUND, "User does not have a Stripe Customer Id");
-        }
-
-        try {
-            var portalSession = com.stripe.model.billingportal.Session.create(
-                    com.stripe.param.billingportal.SessionCreateParams.builder()
-                            .setCustomer(stripeCustomerId)
-                            .setReturnUrl(frontendUrl)
-                            .build()
-            );
-            return new PortalResponse(portalSession.getUrl());
-        } catch (StripeException e) {
-            log.error("Failed to open Stripe billing portal for user {}", userId, e);
-            throw new BadRequestException(ErrorCode.BAD_REQUEST, "We couldn't open the billing portal. Please try again.");
-        }
-    }
-
-    @Override
     @Transactional
     public void handleWebhookEvent(Event event) {
         if (!"checkout.session.completed".equals(event.getType())) {

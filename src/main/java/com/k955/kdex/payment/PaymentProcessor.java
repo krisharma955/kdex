@@ -7,8 +7,6 @@ public interface PaymentProcessor {
 
     CheckoutResponse createCheckoutSessionUrl(DepositRequest depositRequest);
 
-    PortalResponse openCustomerPortal();
-
     void handleWebhookEvent(Event event);
 
 }

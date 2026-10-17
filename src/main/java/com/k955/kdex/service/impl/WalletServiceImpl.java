@@ -8,7 +8,6 @@ import com.k955.kdex.exception.ResourceNotFoundException;
 import com.k955.kdex.mapper.WalletMapper;
 import com.k955.kdex.payment.CheckoutResponse;
 import com.k955.kdex.payment.PaymentProcessor;
-import com.k955.kdex.payment.PortalResponse;
 import com.k955.kdex.repository.WalletRepository;
 import com.k955.kdex.security.JwtAuthUtil;
 import com.k955.kdex.service.WalletService;
@@ -43,11 +42,6 @@ public class WalletServiceImpl implements WalletService {
     @Override
     public CheckoutResponse createDepositCheckout(DepositRequest depositRequest) {
         return paymentProcessor.createCheckoutSessionUrl(depositRequest);
-    }
-
-    @Override
-    public PortalResponse openCustomerPortal() {
-        return paymentProcessor.openCustomerPortal();
     }
 
 }
