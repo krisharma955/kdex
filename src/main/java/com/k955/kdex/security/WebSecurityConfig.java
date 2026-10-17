@@ -1,5 +1,8 @@
 package com.k955.kdex.security;
 
+import com.k955.kdex.security.oauth2.CustomOAuth2UserService;
+import com.k955.kdex.security.oauth2.OAuth2FailureHandler;
+import com.k955.kdex.security.oauth2.OAuth2SuccessHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,6 +27,9 @@ public class WebSecurityConfig {
 
     private final CustomeUserDetailsService customeUserDetailsService;
     private final JwtAuthFilter jwtAuthFilter;
+    private final CustomOAuth2UserService customOAuth2UserService;
+    private final OAuth2SuccessHandler successHandler;
+    private final OAuth2FailureHandler failureHandler;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) {
@@ -31,13 +37,18 @@ public class WebSecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .formLogin(AbstractHttpConfigurer::disable)
                 .sessionManagement(session ->
-                        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                        session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/**", "/health-check", "/ws/**", "/api/payments/webhook").permitAll()
+                        .requestMatchers("/api/auth/**", "/health-check", "/ws/**", "/api/payments/webhook",
+                                "/login/oauth2/**", "/oauth2/authorization/**", "/error").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/coins/**").permitAll()
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
+                .oauth2Login(oauth2 -> oauth2
+                        .userInfoEndpoint(userInfo -> userInfo.userService(customOAuth2UserService))
+                        .successHandler(successHandler)
+                        .failureHandler(failureHandler))
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }

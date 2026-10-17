@@ -1,5 +1,6 @@
 package com.k955.kdex.entity;
 
+import com.k955.kdex.enums.User.Provider;
 import com.k955.kdex.enums.User.Role;
 import com.k955.kdex.enums.User.Status;
 import jakarta.persistence.*;
@@ -29,7 +30,7 @@ public class User {
     @Column(nullable = false, unique = true)
     String email;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     String password;
 
     @Builder.Default
@@ -41,6 +42,14 @@ public class User {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     Status status = Status.ACTIVE;
+
+    @Builder.Default
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    Provider provider = Provider.LOCAL;
+
+    @Column(name = "provider_id")
+    String providerId;
 
     @Column(unique = true)
     String stripeCustomerId;
