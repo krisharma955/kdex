@@ -37,8 +37,9 @@ public class WebSecurityConfig {
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/**", "/health-check", "/ws", "/ws/**", "/api/webhooks/stripe").permitAll()
+                        .requestMatchers("/api/auth/**", "/health-check", "/ws", "/ws/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/coins/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/webhooks/stripe").permitAll()
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
