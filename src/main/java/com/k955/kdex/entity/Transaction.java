@@ -56,6 +56,9 @@ public class Transaction {
     @Column(name = "idempotency_key")
     UUID idempotencyKey;
 
+    @Column(name = "stripe_session_id", unique = true)
+    String stripeSessionId;
+
     @Column(nullable = false, updatable = false)
     Instant createdAt;
 

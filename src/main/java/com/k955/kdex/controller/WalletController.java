@@ -1,16 +1,14 @@
 package com.k955.kdex.controller;
 
 import com.k955.kdex.dtos.Wallet.DepositRequest;
-import com.k955.kdex.dtos.Wallet.DepositResponse;
 import com.k955.kdex.dtos.Wallet.WalletResponse;
+import com.k955.kdex.payment.CheckoutResponse;
+import com.k955.kdex.payment.PortalResponse;
 import com.k955.kdex.service.WalletService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
@@ -25,11 +23,13 @@ public class WalletController {
     }
 
     @PostMapping("/deposit")
-    public ResponseEntity<DepositResponse> deposit(
-            @RequestHeader("Idempotency-Key") UUID idempotencyKey,
-            @Valid @RequestBody DepositRequest depositRequest
-    ) {
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(walletService.deposit(idempotencyKey, depositRequest));
+    public ResponseEntity<CheckoutResponse> deposit(@Valid @RequestBody DepositRequest depositRequest) {
+        return ResponseEntity.ok(walletService.createDepositCheckout(depositRequest));
+    }
+
+    @PostMapping("/portal")
+    public ResponseEntity<PortalResponse> openCustomerPortal() {
+        return ResponseEntity.ok(walletService.openCustomerPortal());
     }
 
 }

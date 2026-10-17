@@ -12,4 +12,6 @@ public interface TransactionRepository extends JpaRepository<Transaction, UUID>,
 
     boolean existsByUserIdAndIdempotencyKey(UUID userId, UUID idempotencyKey);
 
+    boolean existsByStripeSessionId(String stripeSessionId);
+
 }

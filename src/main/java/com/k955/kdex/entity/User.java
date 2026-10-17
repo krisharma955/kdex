@@ -42,6 +42,9 @@ public class User {
     @Column(nullable = false)
     Status status = Status.ACTIVE;
 
+    @Column(unique = true)
+    String stripeCustomerId;
+
     @Column(nullable = false, updatable = false)
     Instant createdAt;
 
