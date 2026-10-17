@@ -38,23 +38,4 @@ public class CoinController {
         return ResponseEntity.ok(coinService.getCoinHistory(symbol));
     }
 
-    @PostMapping("/admin")
-    public ResponseEntity<CoinResponse> createCoin(@Valid @RequestBody CoinRequest coinRequest) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(coinService.createCoin(coinRequest));
-    }
-
-    @PatchMapping("/admin/{coinId}")
-    public ResponseEntity<CoinResponse> updateCoinById(
-            @PathVariable UUID coinId, @Valid @RequestBody UpdateCoinRequest updateCoinRequest
-    ) {
-        return ResponseEntity.ok(coinService.updateCoinById(coinId, updateCoinRequest));
-    }
-
-    @PatchMapping("/admin/{coinId}/status")
-    public ResponseEntity<CoinResponse> updateCoinStatus(
-            @PathVariable UUID coinId, @Valid @RequestBody UpdateCoinStatusRequest updateCoinStatusRequest
-    ) {
-        return ResponseEntity.ok(coinService.updateCoinStatus(coinId, updateCoinStatusRequest));
-    }
-
 }
